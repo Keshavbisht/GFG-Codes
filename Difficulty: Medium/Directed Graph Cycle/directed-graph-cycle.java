@@ -1,42 +1,36 @@
 class Solution {
     boolean[] vis;
-    boolean[] rec;
     public boolean isCyclic(int V, int[][] edges) {
         // code here
+        vis = new boolean[V];
         ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
+        
         for(int i = 0; i< V; i++){
-            adj.add(new ArrayList<Integer>());
+            adj.add(new ArrayList<>());
         }
         for(int i = 0; i< edges.length; i++){
-            int u = edges[i][0];
-            int v = edges[i][1];
-            
-            adj.get(u).add(v);
+            adj.get(edges[i][0]).add(edges[i][1]);
         }
-        vis = new boolean[V];
-        rec = new boolean[V];
-        
-        
+        boolean[] flag;
         for(int i = 0; i< V; i++){
-            if(vis[i] == false){
-                if(helper(i, -1, adj)) return true;
+            if(!vis[i]){
+                flag  = new boolean[V];
+                if(dfs(i, adj,flag)) return true;
             }
         }
         return false;
         
         
     }
-    public boolean helper(int ind, int par,ArrayList<ArrayList<Integer>> adj){
+    public boolean dfs(int ind, ArrayList<ArrayList<Integer>> adj, boolean[] flag){
+        if(flag[ind] == true) return true;
+        flag[ind] = true;
         vis[ind] = true;
-        rec[ind] = true;
-        
         for(int i = 0; i< adj.get(ind).size(); i++){
-            if(vis[adj.get(ind).get(i)] == false){
-                if(helper(adj.get(ind).get(i), ind, adj)) return true;
-            }
-            else if(vis[adj.get(ind).get(i)] == true && rec[adj.get(ind).get(i)] == true ) return true;
+            int temp = adj.get(ind).get(i);
+            if(dfs(temp, adj, flag)) return true;
         }
-        rec[ind] = false;
+        flag[ind] = false;
         return false;
     }
 }
