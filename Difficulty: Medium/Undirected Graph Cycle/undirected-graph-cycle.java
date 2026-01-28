@@ -16,19 +16,25 @@ class Solution {
         }
         for(int i = 0; i< V; i++){
             if(vis[i] == false){
-                if(dfs(i, adj, -1)) return true;
+                if(bfs(i, adj)) return true;
             }
         }
         return false;
     }
-    public boolean dfs(int ind, ArrayList<ArrayList<Integer>> adj, int parent){
-        if(vis[ind] == true) return true;
-        vis[ind] = true;
+    public boolean bfs(int ind, ArrayList<ArrayList<Integer>> adj){
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{ind, -1});
         
-        for(int i = 0; i< adj.get(ind).size(); i++){
-            int temp = adj.get(ind).get(i);
-            if(temp != parent){
-                if(dfs(temp, adj, ind)) return true;
+        // q.add(null);
+        while(!q.isEmpty()){
+            int[] curr = q.remove();
+            if(vis[curr[0]] == true) return true;
+            vis[curr[0]] = true;
+            for(int i = 0; i< adj.get(curr[0]).size(); i++){
+                int temp = adj.get(curr[0]).get(i);
+                if(temp != curr[1]){
+                    q.add(new int[]{temp, curr[0]});
+                }
             }
         }
         return false;
